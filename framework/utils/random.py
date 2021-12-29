@@ -14,3 +14,7 @@ class Random():
         choose = Random.leters_low + Random.leters_up + Random.digits + Random.symbols + ' '
         result =''.join(random.choice(choose) for x in range(length))
         return result
+
+    @staticmethod
+    def get_number_1_to_15():
+        return random.randint(1,15)
