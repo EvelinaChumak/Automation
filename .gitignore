@@ -1,0 +1,5 @@
+*.pytest_cache
+*.idea
+*geckodriver.log
+*log.html
+*.pyc
