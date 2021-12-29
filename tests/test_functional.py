@@ -1,4 +1,5 @@
 from framework.browser.browser import Browser
+from tests.pages.play import Play
 from tests.pages.start_game import StartGame
 from tests.config.urls import Urls
 
@@ -9,3 +10,6 @@ class TestFunctional(object):
         game.choose_random_rival()
         game.choose_random_location()
         game.start_game()
+
+        play = Play()
+        assert play.wait_my_move()
