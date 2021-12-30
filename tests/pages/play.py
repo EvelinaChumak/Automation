@@ -5,13 +5,18 @@ from framework.elements.label import Label
 from framework.elements.button import Button
 from selenium.webdriver.common.keys import Keys
 from framework.browser.browser import Browser
+from framework.utils.logger import Logger
 from framework.utils.random import Random
 from time import sleep
+from tests.config.sequence_of_moves import ROW, COLUMN
 # from
 
 
 class Play(BasePage):
     search_condition = By.XPATH
+    
+
+    _for_hit = 4
 
     lbl_wait_rival_loc = "//*[@class='notification notification__waiting-for-rival']"
     lbl_wait_rival = Label(search_condition=search_condition, locator=lbl_wait_rival_loc,
@@ -63,6 +68,7 @@ class Play(BasePage):
     
     style_miss_auto = "battlefield-cell__miss__auto"
     style_miss = "battlefield-cell__miss"
+    style_hit = "battlefield-cell__hit"
     style_done = "battlefield-cell__done"
     
     def __init__(self):
@@ -77,5 +83,84 @@ class Play(BasePage):
         if (self.lbl_start_rival.is_displayed() or  \
             self.lbl_rival_move.is_displayed() or self.lbl_wait_rival.is_displayed()):
             self.lbl_move.wait_for_visibility()
-        return True
+    
+    def is_game_continue(self):
+        if (self.lbl_rival_leave.is_displayed() or self.lbl_server_error.is_displayed() or \
+            self.lbl_some_error.is_displayed() or self.lbl_you_lose.is_displayed() or \
+            self.lbl_you_win.is_displayed()):
+            return False
+        else: 
+            return True
+    
+    def _create_cell(self, row, collummn):
+        lbl_cell_loc = "//*[@class= 'battlefield battlefield__rival']//tbody/tr[{}]/td[{}]".format(row,collummn)
+        for key, value in ROW.items():
+            if value == row:
+                row = key
+        for key, value in COLUMN.items():
+            if value == collummn:
+                collummn = key
+        lbl_cell = Label(search_condition=self.search_condition, locator=lbl_cell_loc,
+                      name="Cell: {} {}".format(row, collummn))
+        Logger.info("Cell: {} {}".format(row, collummn))
+        return lbl_cell
+    
+    def my_move(self, move_list: list):
+        i = ROW[move_list[0][0]]
+        j = COLUMN[move_list[0][1]]
+        
+
+        lbl_cell = self._create_cell(i,j)
+        
+        if (self.style_miss in lbl_cell.get_attribute_class() or \
+            self.style_hit in lbl_cell.get_attribute_class()):
+            Logger.info('мисклик или хит: удаляю')
+            move_list.pop(0)
+
+        else:
+            lbl_cell.click()
+            Logger.info('кликаю и удаляю {}'.format(move_list[0]))
+            move_list.pop(0)
+            
+            while self.style_hit in lbl_cell.get_attribute_class():
+                rand = Random.get_number_1_to_4()
+                Logger.info('поврежден {}'.format(lbl_cell))
+                if rand == 1 and i != 1: # top row = 1
+                    i = i - 1
+                    lbl_cell= self._create_cell(i,j)
+                    if (self.style_miss in lbl_cell.get_attribute_class() or \
+                        self.style_hit in lbl_cell.get_attribute_class()):
+                        i = i + 1
+                    else: 
+                        lbl_cell.click()
+                        
+                elif rand == 2 and i != 10: # bottom row = 10
+                    i = i + 1
+                    lbl_cell = self._create_cell(i,j)
+                    if (self.style_miss in lbl_cell.get_attribute_class() or \
+                        self.style_hit in lbl_cell.get_attribute_class()):
+                        i = i - 1
+                    else: 
+                        lbl_cell.click()
+                
+                elif rand == 3 and j != 1: # left collumn = 1
+                    j = j - 1
+                    lbl_cell = self._create_cell(i,j)
+                    if (self.style_miss in lbl_cell.get_attribute_class() or \
+                        self.style_hit in lbl_cell.get_attribute_class()):
+                        j = j + 1
+                    else: 
+                        lbl_cell.click()
+                
+                elif rand == 4 and j != 10: # right collumn = 1
+                    j = j + 1
+                    lbl_cell = self._create_cell(i,j)
+                    if (self.style_miss in lbl_cell.get_attribute_class() or \
+                        self.style_hit in lbl_cell.get_attribute_class()):
+                        j = j - 1
+                    else: 
+                        lbl_cell.click()
+
+                    
+        return move_list
             

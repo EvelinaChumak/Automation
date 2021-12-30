@@ -18,3 +18,7 @@ class Random():
     @staticmethod
     def get_number_1_to_15():
         return random.randint(1,15)
+    
+    @staticmethod
+    def get_number_1_to_4():
+        return random.randint(1,4)
