@@ -146,7 +146,6 @@ class Play(BasePage):
                 i = self._row
                 j = self._col            
                 rand = Random.get_number_1_to_4()
-                
                 if rand == 1 and i != 1: # top row = 1
                     i = i - 1
                     self._for_hit = self._for_hit - 1
@@ -185,14 +184,16 @@ class Play(BasePage):
                         self.style_hit in lbl_cell.get_attribute_class()):
                         j = j - 1
                     else: 
-                        lbl_cell.click()
-                                       
-                if self.style_hit in lbl_cell.get_attribute_class():
+                        lbl_cell.click()                     
+                if self.style_hit in lbl_cell.get_attribute_class() and \
+                    self.style_done not in lbl_cell.get_attribute_class() and \
+                    self._for_hit != 0:
                     self.hit_cell = lbl_cell
                     self._for_hit = 4
                     self._col = j
                     self._row = i
-                elif self._for_hit == 0:
+                elif self._for_hit == 0 or \
+                    self.style_done in lbl_cell.get_attribute_class():
                     self.hit_cell = None
                     break
                     
