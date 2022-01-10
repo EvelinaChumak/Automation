@@ -88,6 +88,21 @@ class Play(BasePage):
             return False
         else: 
             return True
+        
+    def why_end(self):
+        win = False
+        mess = ''     
+        if self.lbl_you_win.is_displayed(): 
+            win = True
+        if self.lbl_rival_leave.is_displayed():
+            mess = 'Противник вышел из игры'
+        if self.lbl_server_error.is_displayed():
+            mess = 'Ошибка сервера'
+        if self.lbl_some_error.is_displayed():
+            mess = 'Неизвестная ошибка'
+        if self.lbl_you_lose.is_displayed():
+            mess = 'Вы проиграли'
+        return win, mess
     
     def _create_cell(self, row, collummn):
         lbl_cell_loc = "//*[@class= 'battlefield battlefield__rival']//tbody/tr[{}]/td[{}]".format(row,collummn)
@@ -127,6 +142,7 @@ class Play(BasePage):
         else:
             
             while self.style_hit in self.hit_cell.get_attribute_class():
+                lbl_cell = self.hit_cell
                 i = self._row
                 j = self._col            
                 rand = Random.get_number_1_to_4()
@@ -181,4 +197,3 @@ class Play(BasePage):
                     break
                     
         return move_list
-            

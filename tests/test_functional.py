@@ -4,7 +4,6 @@ from tests.pages.play import Play
 from tests.pages.start_game import StartGame
 from tests.config.urls import Urls
 from tests.config.sequence_of_moves import SEQUENCE_OF_MOVES
-from time import sleep
 
 class TestFunctional(object):
     def test_framework(self, create_browser):
@@ -24,6 +23,7 @@ class TestFunctional(object):
             except TimeoutException:
                 break
             move_list = play.my_move(move_list)
-            sleep(1)
             
-        assert False
+        win, mess = play.why_end()
+        
+        assert win, '{}'.format(mess)
