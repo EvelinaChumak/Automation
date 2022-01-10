@@ -1,13 +1,7 @@
 from framework.pages.base_page import BasePage
 from selenium.webdriver.common.by import By
-from framework.elements.text_box import TextBox
 from framework.elements.label import Label
-from framework.elements.button import Button
-from selenium.webdriver.common.keys import Keys
-from framework.browser.browser import Browser
-from framework.utils.logger import Logger
 from framework.utils.random import Random
-from time import sleep
 from tests.config.sequence_of_moves import ROW, COLUMN
 # from
 
@@ -17,6 +11,9 @@ class Play(BasePage):
     
 
     _for_hit = 4
+    hit_cell = None
+    _row = 0
+    _col = 0
 
     lbl_wait_rival_loc = "//*[@class='notification notification__waiting-for-rival']"
     lbl_wait_rival = Label(search_condition=search_condition, locator=lbl_wait_rival_loc,
@@ -102,32 +99,42 @@ class Play(BasePage):
                 collummn = key
         lbl_cell = Label(search_condition=self.search_condition, locator=lbl_cell_loc,
                       name="Cell: {} {}".format(row, collummn))
-        Logger.info("Cell: {} {}".format(row, collummn))
         return lbl_cell
     
     def my_move(self, move_list: list):
-        i = ROW[move_list[0][0]]
-        j = COLUMN[move_list[0][1]]
         
-
-        lbl_cell = self._create_cell(i,j)
-        
-        if (self.style_miss in lbl_cell.get_attribute_class() or \
-            self.style_hit in lbl_cell.get_attribute_class()):
-            Logger.info('мисклик или хит: удаляю')
-            move_list.pop(0)
-
-        else:
-            lbl_cell.click()
-            Logger.info('кликаю и удаляю {}'.format(move_list[0]))
-            move_list.pop(0)
+        if self.hit_cell == None: 
             
-            while self.style_hit in lbl_cell.get_attribute_class():
+            i = ROW[move_list[0][0]]
+            j = COLUMN[move_list[0][1]]
+            
+            lbl_cell = self._create_cell(i,j)
+            
+            if (self.style_miss in lbl_cell.get_attribute_class() or \
+                self.style_hit in lbl_cell.get_attribute_class()):
+                move_list.pop(0)
+
+            else:
+                lbl_cell.click()
+                move_list.pop(0)
+                
+                if self.style_hit in lbl_cell.get_attribute_class():
+                    self.hit_cell = lbl_cell
+                    self._for_hit = 4
+                    self._row = i
+                    self._col = j
+        
+        else:
+            
+            while self.style_hit in self.hit_cell.get_attribute_class():
+                i = self._row
+                j = self._col            
                 rand = Random.get_number_1_to_4()
-                Logger.info('поврежден {}'.format(lbl_cell))
+                
                 if rand == 1 and i != 1: # top row = 1
                     i = i - 1
-                    lbl_cell= self._create_cell(i,j)
+                    self._for_hit = self._for_hit - 1
+                    lbl_cell = self._create_cell(i,j)
                     if (self.style_miss in lbl_cell.get_attribute_class() or \
                         self.style_hit in lbl_cell.get_attribute_class()):
                         i = i + 1
@@ -137,6 +144,7 @@ class Play(BasePage):
                 elif rand == 2 and i != 10: # bottom row = 10
                     i = i + 1
                     lbl_cell = self._create_cell(i,j)
+                    self._for_hit = self._for_hit - 1
                     if (self.style_miss in lbl_cell.get_attribute_class() or \
                         self.style_hit in lbl_cell.get_attribute_class()):
                         i = i - 1
@@ -146,6 +154,7 @@ class Play(BasePage):
                 elif rand == 3 and j != 1: # left collumn = 1
                     j = j - 1
                     lbl_cell = self._create_cell(i,j)
+                    self._for_hit = self._for_hit - 1
                     if (self.style_miss in lbl_cell.get_attribute_class() or \
                         self.style_hit in lbl_cell.get_attribute_class()):
                         j = j + 1
@@ -155,12 +164,21 @@ class Play(BasePage):
                 elif rand == 4 and j != 10: # right collumn = 1
                     j = j + 1
                     lbl_cell = self._create_cell(i,j)
+                    self._for_hit = self._for_hit - 1
                     if (self.style_miss in lbl_cell.get_attribute_class() or \
                         self.style_hit in lbl_cell.get_attribute_class()):
                         j = j - 1
                     else: 
                         lbl_cell.click()
-
+                                       
+                if self.style_hit in lbl_cell.get_attribute_class():
+                    self.hit_cell = lbl_cell
+                    self._for_hit = 4
+                    self._col = j
+                    self._row = i
+                elif self._for_hit == 0:
+                    self.hit_cell = None
+                    break
                     
         return move_list
             
