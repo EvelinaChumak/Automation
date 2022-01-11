@@ -1,10 +1,11 @@
+from selenium.webdriver.common.by import By
 from framework.browser.browser import Browser
 from framework.elements.label import Label
 from framework.utils.logger import Logger
 
 
 class BasePage:
-    def __init__(self, search_condition, locator, page_name):
+    def __init__(self, locator, page_name, search_condition=By.XPATH):
         self.locator = locator
         self.page_name = page_name
         self.search_condition = search_condition

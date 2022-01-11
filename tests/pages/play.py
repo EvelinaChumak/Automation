@@ -1,5 +1,4 @@
 from framework.pages.base_page import BasePage
-from selenium.webdriver.common.by import By
 from framework.elements.label import Label
 from framework.utils.random import Random
 from tests.config.sequence_of_moves import ROW, COLUMN
@@ -7,60 +6,27 @@ from tests.config.sequence_of_moves import ROW, COLUMN
 
 
 class Play(BasePage):
-    search_condition = By.XPATH
-    
 
     _for_hit = 4
     hit_cell = None
     _row = 0
     _col = 0
 
-    lbl_wait_rival_loc = "//*[@class='notification notification__waiting-for-rival']"
-    lbl_wait_rival = Label(search_condition=search_condition, locator=lbl_wait_rival_loc,
-                      name="Wait rival")
-    
+    lbl_wait_rival_loc = "//*[@class='notification notification__waiting-for-rival']" 
     lbl_chat_loc = "//*[@class='chat-gap']"
-    lbl_chat = Label(search_condition=search_condition, locator=lbl_chat_loc,
-                      name="Chat")
-    
     lbl_start_game_loc = "//*[@class='notification notification__game-started-move-on']"
-    lbl_start_game = Label(search_condition=search_condition, locator=lbl_start_game_loc,
-                      name="You start game")
-    
     lbl_start_rival_loc = "//*[@class='notification notification__game-started-move-off']"
-    lbl_start_rival = Label(search_condition=search_condition, locator=lbl_start_rival_loc,
-                      name="Rival start game")
-
     lbl_move_loc = "//*[@class='notification notification__move-on']"
-    lbl_move = Label(search_condition=search_condition, locator=lbl_move_loc,
-                      name="You move")
+    lbl_rival_move_loc = "//*[@class='notification notification__move-off']" 
     
-    lbl_rival_move_loc = "//*[@class='notification notification__move-off']"
-    lbl_rival_move = Label(search_condition=search_condition, locator=lbl_rival_move_loc,
-                      name="Rival move")
-    
-    lbl_rival_leave_loc = "//*[@class='notification notification__rival-leave']"
-    lbl_rival_leave = Label(search_condition=search_condition, locator=lbl_rival_leave_loc,
-                      name="Rival leave")
-    
+    lbl_rival_leave_loc = "//*[@class='notification notification__rival-leave']" 
     lbl_you_win_loc = "//*[@class='notification notification__game-over-win']"
-    lbl_you_win = Label(search_condition=search_condition, locator=lbl_you_win_loc,
-                      name="You win")
-    
     lbl_you_lose_loc = "//*[@class='notification notification__game-over-lose']"
-    lbl_you_lose = Label(search_condition=search_condition, locator=lbl_you_lose_loc,
-                      name="You lose")
-    
     lbl_server_error_loc = "//*[@class='notification notification__server-error']"
-    lbl_server_error = Label(search_condition=search_condition, locator=lbl_server_error_loc,
-                      name="Server error")
-    
     lbl_some_error_loc = "//*[@class='notification notification__game-error']"
-    lbl_some_error = Label(search_condition=search_condition, locator=lbl_some_error_loc,
-                      name="Some error")
     
     lbl_cell_loc = "//*[@class= 'battlefield battlefield__rival']//tbody/tr[{}]/td[{}]"
-    lbl_cell = Label(search_condition=search_condition, locator=lbl_cell_loc,
+    lbl_cell = Label(locator=lbl_cell_loc,
                       name="Cell")
     
     style_miss_auto = "battlefield-cell__miss__auto"
@@ -69,12 +35,34 @@ class Play(BasePage):
     style_done = "battlefield-cell__done"
     
     def __init__(self):
-        super().__init__(search_condition=Play.search_condition, locator=Play.lbl_chat_loc,
+        super().__init__(locator=Play.lbl_chat_loc,
                          page_name=self.__class__.__name__)
-        super().wait_for_page_opened()
+        
+        self.lbl_wait_rival = Label(locator=self.lbl_wait_rival_loc,
+                      name="Wait rival")
 
-        self.lbl_chat = Label(search_condition=Play.search_condition, locator=Play.lbl_chat_loc,
+        self.lbl_chat = Label(locator=Play.lbl_chat_loc,
                                name="Chat")
+        self.lbl_chat = Label(locator=self.lbl_chat_loc,
+                      name="Chat")
+        self.lbl_start_game = Label(locator=self.lbl_start_game_loc,
+                      name="You start game")
+        self.lbl_start_rival = Label(locator=self.lbl_start_rival_loc,
+                      name="Rival start game")
+        self.lbl_move = Label(locator=self.lbl_move_loc,
+                      name="You move")
+        self.lbl_rival_move = Label(locator=self.lbl_rival_move_loc,
+                      name="Rival move")
+        self.lbl_rival_leave = Label(locator=self.lbl_rival_leave_loc,
+                      name="Rival leave")
+        self.lbl_you_win = Label(locator=self.lbl_you_win_loc,
+                      name="You win")
+        self.lbl_you_lose = Label(locator=self.lbl_you_lose_loc,
+                      name="You lose")
+        self.lbl_server_error = Label(locator=self.lbl_server_error_loc,
+                      name="Server error")
+        self.lbl_some_error = Label(locator=self.lbl_some_error_loc,
+                      name="Some error")
 
     def wait_my_move(self):
         if (self.lbl_start_rival.is_displayed() or  \
@@ -82,12 +70,9 @@ class Play(BasePage):
             self.lbl_move.wait_for_visibility()
     
     def is_game_continue(self):
-        if (self.lbl_rival_leave.is_displayed() or self.lbl_server_error.is_displayed() or \
+        return not (self.lbl_rival_leave.is_displayed() or self.lbl_server_error.is_displayed() or \
             self.lbl_some_error.is_displayed() or self.lbl_you_lose.is_displayed() or \
-            self.lbl_you_win.is_displayed()):
-            return False
-        else: 
-            return True
+            self.lbl_you_win.is_displayed())
         
     def why_end(self):
         win = False
@@ -112,7 +97,7 @@ class Play(BasePage):
         for key, value in COLUMN.items():
             if value == collummn:
                 collummn = key
-        lbl_cell = Label(search_condition=self.search_condition, locator=lbl_cell_loc,
+        lbl_cell = Label(locator=lbl_cell_loc,
                       name="Cell: {} {}".format(row, collummn))
         return lbl_cell
     

@@ -1,10 +1,10 @@
 # coding=utf-8
 from framework.elements.base.base_element import BaseElement
-
+from selenium.webdriver.common.by import By
 
 class Label(BaseElement):
 
-    def __init__(self, search_condition, locator, name):
+    def __init__(self, locator, name, search_condition=By.XPATH):
         super(Label, self).__init__(search_condition_of=search_condition, loc=locator, name_of=name)
 
     def __getitem__(self, key):

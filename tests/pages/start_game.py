@@ -5,27 +5,25 @@ from framework.utils.random import Random
 
 
 class StartGame(BasePage):
-    search_condition = By.XPATH
-
+    
     lbl_random_rival_loc = "//*[@class='battlefield-start-choose_rival-variant-link']"
-    lbl_random_rival = Label(search_condition=search_condition, locator=lbl_random_rival_loc,
-                      name="Random rival")
     
     lbl_random_location_loc = "//*[@class='placeships-variant placeships-variant__randomly']/span"
-    lbl_random_location = Label(search_condition=search_condition, locator=lbl_random_location_loc,
-                      name="Random location")
     
     lbl_start_loc = "//*[@class='battlefield-start-button']"
-    lbl_start = Label(search_condition=search_condition, locator=lbl_start_loc,
-                      name="Start game")
 
     def __init__(self):
-        super().__init__(search_condition=StartGame.search_condition, locator=StartGame.lbl_random_rival_loc,
+        super().__init__(locator=StartGame.lbl_random_rival_loc,
                          page_name=self.__class__.__name__)
-        super().wait_for_page_opened()
 
-        self.lbl_random_rival = Label(search_condition=StartGame.search_condition, locator=StartGame.lbl_random_rival_loc,
+        self.lbl_random_rival = Label(locator=StartGame.lbl_random_rival_loc,
                                name="Random rival")
+        self.lbl_random_rival = Label( locator=self.lbl_random_rival_loc,
+                      name="Random rival")
+        self.lbl_random_location = Label(locator=self.lbl_random_location_loc,
+                      name="Random location")
+        self.lbl_start = Label(locator=self.lbl_start_loc,
+                      name="Start game")
 
     def choose_random_rival(self):
         self.lbl_random_rival.click()
