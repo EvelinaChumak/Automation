@@ -14,20 +14,7 @@ class Play(BasePage):
 
     move_list = list(SEQUENCE_OF_MOVES)
 
-    lbl_wait_rival_loc = "//*[@class='notification notification__waiting-for-rival']"
     lbl_chat_loc = "//*[@class='chat-gap']"
-    lbl_start_game_loc = "//*[@class='notification notification__game-started-move-on']"
-    lbl_start_rival_loc = (
-        "//*[@class='notification notification__game-started-move-off']"
-    )
-    lbl_move_loc = "//*[@class='notification notification__move-on']"
-    lbl_rival_move_loc = "//*[@class='notification notification__move-off']"
-
-    lbl_rival_leave_loc = "//*[@class='notification notification__rival-leave']"
-    lbl_you_win_loc = "//*[@class='notification notification__game-over-win']"
-    lbl_you_lose_loc = "//*[@class='notification notification__game-over-lose']"
-    lbl_server_error_loc = "//*[@class='notification notification__server-error']"
-    lbl_some_error_loc = "//*[@class='notification notification__game-error']"
 
     lbl_cell_loc = "//*[@class= 'battlefield battlefield__rival']//tbody/tr[{}]/td[{}]"
     lbl_cell = Label(locator=lbl_cell_loc, name="Cell")
@@ -39,60 +26,7 @@ class Play(BasePage):
 
     def __init__(self):
         super().__init__(locator=Play.lbl_chat_loc, page_name=self.__class__.__name__)
-
-        self.lbl_wait_rival = Label(locator=self.lbl_wait_rival_loc, name="Wait rival")
-
-        self.lbl_chat = Label(locator=Play.lbl_chat_loc, name="Chat")
         self.lbl_chat = Label(locator=self.lbl_chat_loc, name="Chat")
-        self.lbl_start_game = Label(
-            locator=self.lbl_start_game_loc, name="You start game"
-        )
-        self.lbl_start_rival = Label(
-            locator=self.lbl_start_rival_loc, name="Rival start game"
-        )
-        self.lbl_move = Label(locator=self.lbl_move_loc, name="You move")
-        self.lbl_rival_move = Label(locator=self.lbl_rival_move_loc, name="Rival move")
-        self.lbl_rival_leave = Label(
-            locator=self.lbl_rival_leave_loc, name="Rival leave"
-        )
-        self.lbl_you_win = Label(locator=self.lbl_you_win_loc, name="You win")
-        self.lbl_you_lose = Label(locator=self.lbl_you_lose_loc, name="You lose")
-        self.lbl_server_error = Label(
-            locator=self.lbl_server_error_loc, name="Server error"
-        )
-        self.lbl_some_error = Label(locator=self.lbl_some_error_loc, name="Some error")
-
-    def wait_my_move(self):
-        if (
-            self.lbl_start_rival.is_displayed()
-            or self.lbl_rival_move.is_displayed()
-            or self.lbl_wait_rival.is_displayed()
-        ):
-            self.lbl_move.wait_for_visibility()
-
-    def is_game_continue(self):
-        return not (
-            self.lbl_rival_leave.is_displayed()
-            or self.lbl_server_error.is_displayed()
-            or self.lbl_some_error.is_displayed()
-            or self.lbl_you_lose.is_displayed()
-            or self.lbl_you_win.is_displayed()
-        )
-
-    def why_end(self):
-        win = False
-        mess = ""
-        if self.lbl_you_win.is_displayed():
-            win = True
-        if self.lbl_rival_leave.is_displayed():
-            mess = "Противник вышел из игры"
-        if self.lbl_server_error.is_displayed():
-            mess = "Ошибка сервера"
-        if self.lbl_some_error.is_displayed():
-            mess = "Неизвестная ошибка"
-        if self.lbl_you_lose.is_displayed():
-            mess = "Вы проиграли"
-        return win, mess
 
     def _create_cell(self, row, collummn):
         lbl_cell_loc = (
