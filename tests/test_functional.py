@@ -1,29 +1,30 @@
+from selenium.common.exceptions import TimeoutException
 from framework.browser.browser import Browser
-from tests.pages.home_page import HomePage
-import allure
+from tests.pages.info_form import InfoForm
+from tests.pages.play import Play
+from tests.pages.start_game import StartGame
+from tests.config.urls import Urls
+from tests.config.sequence_of_moves import SEQUENCE_OF_MOVES
 
 
-class TestFunctional(object):
-    def test_framework(self, create_browser):
-        with allure.step("First step"):
+class TestSeaBattle(object):
+    def test_move_alg(self, create_browser):
+        Browser.get_browser().set_url(Urls.TEST_STAND_URL)
+        game = StartGame()
+        game.choose_random_rival()
+        game.choose_random_location()
+        game.start_game()
 
+        play = Play()
+        info = InfoForm()
 
-            Browser.get_browser().set_url('https://people.onliner.by/2019/07/04/sk-soobshhil')
-            # Browser.get_browser().set_url('https://www.onliner.by/')
-            # Browser.get_browser().set_url('https://google.com')
-            home_page = HomePage()
-            login = 'TestAccNik'
-            password = 'qwaszx@1'
-            home_page.login(login, password)
+        while info.is_game_continue():
+            try:
+                info.wait_my_move()
+            except TimeoutException:
+                break
+            play.my_move()
 
+        win, mess = info.why_end()
 
-
-            # Logger.info('13123')
-            # home_page.wait_for_page_opened()
-            # log = logging.getLogger("Logger")
-            # log.info('sdf')
-            # logging.info('sdfsdfdsfsdf')
-            # logging.error('sdfsdfdsfsdf')
-            # logging.warning('sdfsdfdsfsdf')
-        # finally:
-        #     Browser.quit('chrome')
+        assert win, "{}".format(mess)
