@@ -5,7 +5,6 @@ from tests.utils.create_url import CreateUrl
 from tests.utils.xml import XML
 from tests.config.info_for_api import InfoForProject
 from tests.models.weather_xml import Weather_XML
-import string
 
 
 class WeatherApi():
@@ -14,7 +13,7 @@ class WeatherApi():
         params = {
             'lat': lat,
             'lon': lon,
-            'mode': 'xml',
+            'mode': InfoForProject.MODE_XML,
             'lang': InfoForProject.LANG
         }
         url = CreateUrl.get_url(params=params)
@@ -25,10 +24,6 @@ class WeatherApi():
 
     def is_xml(self):
         return self.responce.is_xml()
-
-    def is_rus_leng(self, weather: Weather_XML):
-        val = weather.get_values('weather_value')
-        for c in val:
-            if c not in string.ascii_letters:
-                return False
-        return True
+    
+    def get_status(self):
+        return self.responce.get_status()
