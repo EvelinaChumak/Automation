@@ -1,3 +1,3 @@
 class Urls(object):
-    TEST_STAND_URL = "https://google.com"
-    LOGIN_STAND_URL = TEST_STAND_URL + "/login"
+    API_URL = "http://api.openweathermap.org/data/2.5/weather?"
+    API_KEY = "c7021e40df3491e90ae81d233e5b3f0a"

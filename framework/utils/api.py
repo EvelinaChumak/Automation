@@ -3,6 +3,10 @@ from framework.utils.logger import Logger
 from framework.constants.methods import Methods
 
 class API():
+    
+    OK = 200
+    NOT_FOUND = 404
+    CREATED = 201
 
     def __init__(self, method: Methods, url, data=None):
         self.send_request(method, url, data)
@@ -27,15 +31,24 @@ class API():
     def get_status(self):
         Logger.info('Получаю статус запроса')
         return self.__response.status_code
+    
 
     def is_json(self):
         Logger.info('Проверка, являются ли полученные данные json')
         res = self.get_headers().get('content-type')
         return 'application/json' in res
-
+    
     def get_json(self):
         Logger.info('Получаю данные в формате json')
         return self.__response.json()
+    
+    def get_text(self):
+        Logger.info('Получаю данные в формате text')
+        return self.__response.text
+    
+    def get_content(self):
+        Logger.info('Получаю данные')
+        return self.__response.content
     
     def get_headers(self):
         Logger.info('Получение заголовков')
