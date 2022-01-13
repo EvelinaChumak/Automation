@@ -31,12 +31,15 @@ class API():
     def get_status(self):
         Logger.info('Получаю статус запроса')
         return self.__response.status_code
-    
 
     def is_json(self):
         Logger.info('Проверка, являются ли полученные данные json')
         res = self.get_headers().get('content-type')
         return 'application/json' in res
+    
+    def is_xml(self):
+        Logger.info('Проверка, являются ли полученные данные xml')
+        return '<?xml' in self.__response.text
     
     def get_json(self):
         Logger.info('Получаю данные в формате json')
