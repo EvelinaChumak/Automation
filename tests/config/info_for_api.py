@@ -5,3 +5,4 @@ class InfoForProject():
     TEMPERATURE = 'metric'
     TEMP_MIN = -40
     TEMP_MAX = 40
+    FIELDS = ('coord', 'weather', 'main', 'visibility', 'wind', 'clouds', 'dt', 'sys', 'id', 'name', 'cod')

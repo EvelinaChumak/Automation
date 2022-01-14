@@ -1,6 +1,5 @@
 from framework.utils.api import API
 from framework.constants.methods import Methods
-from framework.utils.logger import Logger
 from tests.utils.create_url import CreateUrl
 from tests.utils.xml import XML
 from tests.config.info_for_api import InfoForProject
@@ -24,10 +23,10 @@ class WeatherApi():
 
     def is_xml(self):
         return self.responce.is_xml()
-    
+
     def get_status(self):
         return self.responce.get_status()
-    
+
     def get_json_by_id(self, id):
         params = {
             'id': id
@@ -36,4 +35,12 @@ class WeatherApi():
         self.responce = API(method=Methods.GET, url=url)
         weather_json = WeatherJSON(self.responce.get_json())
         return weather_json
-    
+
+    def get_json_by_name(self, name, state='', country=''):
+        params = {
+            'q': '{},{},{}'.format(name, state, country)
+        }
+        url = CreateUrl.get_url(params=params)
+        self.responce = API(method=Methods.GET, url=url)
+        weather_json = WeatherJSON(self.responce.get_json())
+        return weather_json
