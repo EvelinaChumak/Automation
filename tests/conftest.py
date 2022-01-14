@@ -3,6 +3,7 @@ import allure
 from framework.browser.browser import Browser
 from tests.config.browser import BrowserConfig
 from tests.config.browser import Grid
+from tests.utils.city_list import CityList
 
 
 def pytest_addoption(parser):
@@ -29,3 +30,11 @@ def create_browser(request):
     with allure.step("Закрытие сессий всех браузеров"):
         for browser_key in list(Browser.get_browser().get_driver_names()):
             Browser.get_browser().quit(browser_key=browser_key)
+
+def pytest_configure():
+    pytest.city_list = None
+
+@pytest.fixture(scope="session")
+def read_city_info():
+    pytest.city_list = CityList()
+    pytest.city_list.read_file()

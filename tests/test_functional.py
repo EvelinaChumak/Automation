@@ -2,16 +2,16 @@ from tests.utils.weather_api import WeatherApi
 from tests.utils.city_list import CityList
 from framework.constants.status import Status
 import allure
+import pytest
 
 
 class TestWeatherApi(object):
-    def test_xml(self):
+
+    def test_xml(self, read_city_info):
         api = WeatherApi()
 
-        city_list = CityList()
-        city_list.read_file()
-        city = city_list.get_random_city()
-        lon, lat = city_list.get_city_coord(city)
+        city = pytest.city_list.get_random_city()
+        lon, lat = pytest.city_list.get_city_coord(city)
 
         weather = api.get_xml_by_coord(lat, lon)
         code = api.get_status()
@@ -24,3 +24,17 @@ class TestWeatherApi(object):
             weather.get_coords(), [lat, lon])
 
         assert weather.is_rus_leng, 'Данные получены не на русском языке'
+
+    def test_temp(self):
+        api = WeatherApi()
+
+        city = pytest.city_list.get_random_city()
+        id = pytest.city_list.get_city_id(city)
+
+        weather = api.get_json_by_id(id)
+
+        code = api.get_status()
+
+        assert code == Status.OK, 'Ответ получен с кодом {}'.format(code)
+
+        assert weather.is_temp_cels(), 'Температура не в градусах Цельсия'

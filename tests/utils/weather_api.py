@@ -4,7 +4,8 @@ from framework.utils.logger import Logger
 from tests.utils.create_url import CreateUrl
 from tests.utils.xml import XML
 from tests.config.info_for_api import InfoForProject
-from tests.models.weather_xml import Weather_XML
+from tests.models.weather_xml import WeatherXML
+from tests.models.weather_json import WeatherJSON
 
 
 class WeatherApi():
@@ -14,12 +15,11 @@ class WeatherApi():
             'lat': lat,
             'lon': lon,
             'mode': InfoForProject.MODE_XML,
-            'lang': InfoForProject.LANG
         }
         url = CreateUrl.get_url(params=params)
         self.responce = API(method=Methods.GET, url=url)
         answ = XML.get_tree(self.responce.get_content())
-        weather_xml = Weather_XML(answ)
+        weather_xml = WeatherXML(answ)
         return weather_xml
 
     def is_xml(self):
@@ -27,3 +27,13 @@ class WeatherApi():
     
     def get_status(self):
         return self.responce.get_status()
+    
+    def get_json_by_id(self, id):
+        params = {
+            'id': id
+        }
+        url = CreateUrl.get_url(params=params)
+        self.responce = API(method=Methods.GET, url=url)
+        weather_json = WeatherJSON(self.responce.get_json())
+        return weather_json
+    

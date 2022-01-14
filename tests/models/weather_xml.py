@@ -2,7 +2,7 @@ from lxml import etree
 import string
 
 
-class Weather_XML():
+class WeatherXML():
 
     def __init__(self, root: etree.Element):
         all_child = root.iterdescendants()
