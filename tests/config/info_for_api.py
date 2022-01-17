@@ -1,4 +1,5 @@
 class InfoForProject():
+    API_VERSION = 2.5
     JSON_NAME = 'city.list.json'
     LANG = 'ru'
     MODE_XML = 'xml'

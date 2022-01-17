@@ -17,7 +17,7 @@ class WeatherJSON():
 
     def is_temp_cels(self):
         temp = self.__dict__.get('main_temp')
-        return temp > InfoForProject.TEMP_MIN and temp < InfoForProject.TEMP_MAX
+        return InfoForProject.TEMP_MAX < temp > InfoForProject.TEMP_MIN
 
     def is_args_correct(self):
         keys_list = []

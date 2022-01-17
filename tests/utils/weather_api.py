@@ -8,6 +8,9 @@ from tests.models.weather_json import WeatherJSON
 
 
 class WeatherApi():
+    
+    def __init__(self):
+        self.responce = None
 
     def get_xml_by_coord(self, lat, lon):
         params = {

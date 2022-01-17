@@ -5,7 +5,7 @@ import allure
 import pytest
 
 
-class TestWeatherApi(object):
+class TestWeatherApi():
 
     def test_xml(self, read_city_info):
         api = WeatherApi()

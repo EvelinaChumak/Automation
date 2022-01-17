@@ -17,9 +17,7 @@ class WeatherXML():
                 raise 'Unknown argument {}'.format(arg)
             else:
                 val.append(self.__dict__.get(arg))
-        if len(val) == 1:
-            return val[0]
-        return val
+        return val[0] if len(val) == 1 else val
 
     def is_rus_leng(self):
         val = self.get_values('weather_value')

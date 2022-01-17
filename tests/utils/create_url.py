@@ -6,7 +6,7 @@ class CreateUrl():
 
     @staticmethod
     def get_url(params: dict):
-        url = Urls.API_URL
+        url = Urls.API_URL.format(InfoForProject.API_VERSION)
         for key, val in params.items():
             url = url + key + '=' + str(val) + '&'
         url = url + 'lang=' + InfoForProject.LANG + '&units=' + InfoForProject.TEMPERATURE
