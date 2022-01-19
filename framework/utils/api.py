@@ -4,16 +4,21 @@ from framework.constants.methods import Methods
 
 
 class API():
+    
+    OK = 200
+    NOT_FOUND = 404
+    CREATED = 201
 
-    def __init__(self, method: Methods, url, data=None):
-        self.send_request(method, url, data)
+    def __init__(self, method: Methods, url, params=None, data=None):
+        self.send_request(method, url, params, data)
 
-    def send_request(self, method: Methods, url, data=None):
+    def send_request(self, method: Methods, url, params=None, data=None):
         Logger.info('Отправляю запрос "' + method.value + '" на ' + url)
         self.__url = url
         self.__data = data
+        self.__params = params
         if method == Methods.GET:
-            self.__response = requests.get(url=self.__url, data=self.__data)
+            self.__response = requests.get(url=self.__url, params=self.__params, data=self.__data)
         if method == Methods.POST:
             self.__response = requests.post(url=self.__url, data=self.__data)
         if method == Methods.PUT:
