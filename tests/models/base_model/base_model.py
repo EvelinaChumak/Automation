@@ -17,7 +17,7 @@ class BaseModel():
             else:
                 new_info[key] = value
         return cls(**new_info)
-    
+
     @classmethod
     def get_by_attr(cls, **info):
         url = CreateUrl.get_url(info)

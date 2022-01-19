@@ -18,8 +18,7 @@ class TestWeatherApi():
         code = weather.get_status()
 
         assert code == API.OK, 'Ответ получен с кодом {}'.format(code)
-        
-        temp = weather.main.temp 
+
+        temp = weather.main.temp
 
         assert InfoForProject.TEMP_MIN < temp < InfoForProject.TEMP_MAX, 'Температура не в градусах Цельсия'
-

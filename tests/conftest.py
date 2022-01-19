@@ -30,4 +30,3 @@ def create_browser(request):
     with allure.step("Закрытие сессий всех браузеров"):
         for browser_key in list(Browser.get_browser().get_driver_names()):
             Browser.get_browser().quit(browser_key=browser_key)
-
