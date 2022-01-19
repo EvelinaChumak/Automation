@@ -1,4 +1,4 @@
-from tests.models.base_model.base_model import BaseModel
+from tests.models.base_model import BaseModel
 
 class WeatherAPI(BaseModel):
     

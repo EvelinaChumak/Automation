@@ -10,7 +10,7 @@ import pytest
 
 class TestWeatherApi():
 
-    def test_xml(self):
+    def test_temp(self):
         city = CityList.get_random_city()
         id = CityList.get_attr(city, CityList.ID)
 
