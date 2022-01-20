@@ -1,36 +1,33 @@
 import json
 from tests.config.info_for_api import InfoForProject
-from random import randint
+from random import choice
 
 
 class CityList():
+    ID = 'id'
+    NAME = 'name'
+    STATE = 'state'
+    COUNTRY = 'country'
+    COORD = 'COORD'
 
-    __file = None
-    __city = None
+    with open(InfoForProject.JSON_NAME, encoding='utf-8', mode='r') as f:
+        __file = json.loads(f.read())
 
-    def read_file(self):
-        with open(InfoForProject.JSON_NAME, encoding='utf-8', mode='r') as f:
-            self.__file = json.loads(f.read())
+    @staticmethod
+    def get_random_city():
+        return choice(CityList.__file)
 
-    def get_random_city(self):
-        self.__city = self.__file[randint(0, len(self.__file))]
-        return self.__city
-
-    def get_city_id(self):
-        return self.__city.get('id')
-
-    def get_city_name(self):
-        return self.__city.get('name')
-    
-    def get_city_state(self):
-        return self.__city.get('state')
-    
-    def get_city_country(self):
-        return self.__city.get('country')
-
-    def get_city_coord(self):
+    @staticmethod
+    def get_attr(city, attribute):
         """
+        Args:
+            city ([dict]): city from get_random_city()
+            attribute ([str]) or (CityList.attribute): key in city
+
         Returns:
-            lon, let
+            [str] or [number]: if choose CityList.COORD return 2 values
         """
-        return self.__city.get('coord').get('lon'), self.__city.get('coord').get('lat')
+        if attribute == CityList.COORD:
+            return city.get('coord').get('lon'), city.get('coord').get('lat')
+        else:
+            return city.get(attribute)
